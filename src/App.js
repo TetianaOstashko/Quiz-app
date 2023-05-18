@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import "./App.css";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import QuizQuestion from "./components/quizQuestion";
+import { setScore, setCurrentQuestion, setShowResults } from "./store/actions";
+import "./App.css";
 
 function App() {
-  const [showResults, setShowResults] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [score, setScore] = useState(0);
+  const showResults = useSelector(state => state.showResults);
+  const currentQuestion = useSelector(state => state.currentQuestion);
+  const score = useSelector(state => state.score);
 
   const questions = [
     {
@@ -65,35 +67,34 @@ function App() {
 
   ];
 
+  const dispatch = useDispatch();
+
   const handleOptionClicked = (isCorrect) => {
     if (isCorrect) {
-      setScore(score + 1);
+      dispatch(setScore(score + 1));
     }
-
     if (currentQuestion + 1 < questions.length) {
-      setCurrentQuestion(currentQuestion + 1);
+      dispatch(setCurrentQuestion(currentQuestion + 1));
     } else {
-      setShowResults(true);
+      dispatch(setShowResults(true));
     }
   };
 
   const restartGame = () => {
-    setScore(0);
-    setCurrentQuestion(0);
-    setShowResults(false);
+    dispatch(setScore(0));
+    dispatch(setCurrentQuestion(0));
+    dispatch(setShowResults(false));
   };
 
   return (
     <div className="App">
       <h1>Quiz</h1>
       <h2>Score: {score}</h2>
-
       {showResults ? (
         <div className="final-results">
           <h1>Final Results</h1>
           <h2>
-            {score} out of {questions.length} correct - (
-            {(score / questions.length) * 100}%)
+          {score} out of {questions.length} correct - ({(score / questions.length) * 100}%)
           </h2>
           <button onClick={restartGame}>Restart game</button>
         </div>
@@ -106,5 +107,6 @@ function App() {
     </div>
   );
 }
-
+    
 export default App;
+

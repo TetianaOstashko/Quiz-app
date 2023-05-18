@@ -1,22 +1,24 @@
 import React from "react";
 import QuizAnswer from "./quizAnswer";
+import { useSelector } from "react-redux";
 
-function QuizQuestion({ question, onOptionClicked }) {
-  return (
-    <div className="question-card">
-      {/*<h2>Question: {question.id + 1} out of {question.totalQuestions}</h2>*/}
-      <h3 className="question-text">{question.text}</h3>
-      <ul>
-        {question.options.map((option) => (
-          <QuizAnswer
-            key={option.id}
-            option={option}
-            onOptionClicked={onOptionClicked}
-          />
-        ))}
-      </ul>
-    </div>
-  );
+function QuizQuestion({ onOptionClicked }) {
+    const question = useSelector(state => state.questions[state.currentQuestion]);
+
+    return (
+        <div className="question-card">
+            <h3 className="question-text">{question.text}</h3>
+            <ul>
+                {question.options.map((option) => (
+                    <QuizAnswer
+                        key={option.id}
+                        option={option}
+                        onOptionClicked={onOptionClicked}
+                    />
+                ))}
+            </ul>
+        </div>
+    );
 }
 
 export default QuizQuestion;
